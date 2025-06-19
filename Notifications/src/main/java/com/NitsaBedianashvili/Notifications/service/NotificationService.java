@@ -17,7 +17,7 @@ public class NotificationService {
         return notificationRepo.findAll();
     }
 
-    public NotificationPreference showPreferancesByID(int id) {
+    public NotificationPreference showPreferancesByID(long id) {
         return notificationRepo.findById(id).orElse(null);
     }
 

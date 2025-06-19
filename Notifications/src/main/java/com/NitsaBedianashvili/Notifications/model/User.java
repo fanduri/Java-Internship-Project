@@ -1,26 +1,80 @@
 package com.NitsaBedianashvili.Notifications.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 @Data
-@Entity
 @Table(name = "Users")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Entity
 public class User {
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private NotificationPreference notificationPreference;
+
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
-    private Integer ID;
+    private Long ID;
     private String name;
     private String surname;
 
     private String email;
     private String address;
-    private int phone_num;
+    private int phoneNum;
 
+
+
+
+
+    //security
+//    private String userName;
+//    private String password;
+//    private UserType usertype;
+
+//    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//
+//        SimpleGrantedAuthority authority =
+//                new SimpleGrantedAuthority(usertype.name());
+//        return Collections.singletonList(authority);
+//    }
+//
+//    @Override
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    @Override
+//    public String getUsername() {
+//        return userName;
+//    }
+
+//    @Override
+//    public boolean isAccountNonExpired() {
+//        return UserDetails.super.isAccountNonExpired();
+//    }
+//
+//    @Override
+//    public boolean isAccountNonLocked() {
+//        return UserDetails.super.isAccountNonLocked();
+//    }
+//
+//    @Override
+//    public boolean isCredentialsNonExpired() {
+//        return UserDetails.super.isCredentialsNonExpired();
+//    }
+//
+//    @Override
+//    public boolean isEnabled() {
+//        return UserDetails.super.isEnabled();
+//    }
 }
