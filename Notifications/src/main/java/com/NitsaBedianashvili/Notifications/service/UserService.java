@@ -41,6 +41,13 @@ public class UserService {
     }
 
 
+
+//gets user information by ID
+    public User getUserInformationByID(long id) {
+        return userRepo.getReferenceById(id);
+    }
+
+
     //returns users preference by User
     public NotificationPreference getUserPreferenceByUser (User user){
         return notificationRepo.findById(user.getID()).orElse(null);
@@ -75,4 +82,6 @@ public class UserService {
         System.out.println("User Can Not Be Updated, User Does Not Exist!");
 
     }
+
+
 }

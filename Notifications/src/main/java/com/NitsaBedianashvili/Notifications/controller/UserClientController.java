@@ -10,31 +10,32 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 public class UserClientController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    NotificationService notificationService;
+    private NotificationService notificationService;
 
 
-    //page where everyone ends up, you can chose to register or log in
+    //page where everyone ends up, you can choose to register or log in
     @GetMapping("/")
     public void hello(){
         System.out.println( "Hello User, Register or Log In");
     }
 
     @PostMapping("/register")
-    public void addUser(@RequestBody User user){
-        System.out.println("hello "+user);
-        userService.createUser(user);
+    public User addUser(@RequestBody User user){
+//        System.out.println("hello "+user);
+        return userService.createUser(user);
     }
 
     @GetMapping("/client/{ID}")
-    public NotificationPreference getNotificationInformation(@PathVariable long ID) {
-        return userService.getUserPreferenceByID(ID);
+    public void getInformationAboutClient(@PathVariable long ID) {
+         userService.getUserPreferenceByID(ID);
+         userService.getUserInformationByID(ID);
     }
 
     @PutMapping("/client/{ID}")

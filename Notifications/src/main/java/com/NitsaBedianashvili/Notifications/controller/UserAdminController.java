@@ -64,18 +64,8 @@ public class UserAdminController {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+/// //////////////////////////////////////////////////////////////////////////////////
+/// Notification sending and handling below
 
     //page where admins can see notification statuses (if they delivered correctly or not etc.)
     @GetMapping("/{ID}/notificationStatus")
