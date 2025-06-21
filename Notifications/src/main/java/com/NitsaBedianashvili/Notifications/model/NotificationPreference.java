@@ -3,11 +3,15 @@ package com.NitsaBedianashvili.Notifications.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @Data
 @Entity
 @Table(name = "notifications")
 @NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
 public class NotificationPreference {
 
     @OneToOne
@@ -42,4 +46,6 @@ public class NotificationPreference {
                 ", telNotif=" + telNotif +
                 '}';
     }
+
+
 }

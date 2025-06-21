@@ -12,21 +12,33 @@ import java.util.List;
 public class NotificationService {
     @Autowired
     NotificationRepo notificationRepo ;
-
-    public List<NotificationPreference> showAllPreferances(){
-        return notificationRepo.findAll();
-    }
-
-    public NotificationPreference showPreferancesByID(long id) {
-        return notificationRepo.findById(id).orElse(null);
-    }
-
-    public void putInNotifList( NotificationPreference notificationPreference){
+//
+//    public List<NotificationPreference> showAllPreferances(){
+//        return notificationRepo.findAll();
+//    }
+//
+//    public NotificationPreference showPreferencesByID(long id) {
+//        return notificationRepo.findById(id).orElse(null);
+//    }
+//
+    public void putInNotificationList( NotificationPreference notificationPreference){
         notificationRepo.save(notificationPreference);
     }
 
 
-    public void deleteNotifPreferance( NotificationPreference notificationPreference) {
+    public void deleteNotificationPreferance( NotificationPreference notificationPreference) {
         notificationRepo.delete(notificationPreference);
+    }
+
+    public NotificationPreference UpdateNotification(long id, NotificationPreference notificationPreference) {
+        if (notificationRepo.existsById(id) ){
+            NotificationPreference notificationPreference1= notificationRepo.getReferenceById(id);
+            notificationPreference1.setTelNotif(notificationPreference.getTelNotif());
+            notificationPreference1.setEmailNotif(notificationPreference.getEmailNotif());
+            notificationPreference1.setPostalNotif(notificationPreference.getPostalNotif());
+            return notificationPreference;
+
+        }
+        return null;
     }
 }

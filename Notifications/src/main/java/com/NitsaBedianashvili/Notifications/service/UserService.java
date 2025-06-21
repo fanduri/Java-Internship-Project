@@ -26,7 +26,7 @@ public class UserService {
         return userRepo.save(user);
     }
 
-    private NotificationPreference createDefaultPreferences(User user) {
+    public NotificationPreference createDefaultPreferences(User user) {
         NotificationPreference preferences = new NotificationPreference();
 
         //by default if user has a notification addres the notifications are on
@@ -37,5 +37,15 @@ public class UserService {
 
         return preferences;
 
+    }
+
+
+    //returns users preference by User
+    public NotificationPreference getUserPreferenceByUser (User user){
+        return notificationRepo.findById(user.getID()).orElse(null);
+    }
+    //returns users preference by ID
+    public NotificationPreference getUserPreferenceByID(Long id){
+        return notificationRepo.findById(id).orElse(null);
     }
 }
