@@ -12,15 +12,7 @@ import java.util.List;
 public class NotificationService {
     @Autowired
     NotificationRepo notificationRepo ;
-//
-//    public List<NotificationPreference> showAllPreferances(){
-//        return notificationRepo.findAll();
-//    }
-//
-//    public NotificationPreference showPreferencesByID(long id) {
-//        return notificationRepo.findById(id).orElse(null);
-//    }
-//
+
     public void putInNotificationList( NotificationPreference notificationPreference){
         notificationRepo.save(notificationPreference);
     }
@@ -30,10 +22,12 @@ public class NotificationService {
         notificationRepo.delete(notificationPreference);
     }
 
-    public NotificationPreference UpdateNotification(long id, NotificationPreference notificationPreference) {
-        if (notificationRepo.existsById(id)){
+    public NotificationPreference UpdateNotification( NotificationPreference notificationPreference) {
+
+        //TODO: DOes not work!!!!!!!!!
+        if (notificationRepo.existsById(notificationPreference.getID())){
 //            notificationRepo.save()
-            NotificationPreference notificationPreference1= notificationRepo.getReferenceById(id);
+            NotificationPreference notificationPreference1= notificationRepo.getReferenceById(notificationPreference.getID());
             notificationPreference1.setTelNotif(notificationPreference.getTelNotif());
             notificationPreference1.setEmailNotif(notificationPreference.getEmailNotif());
             notificationPreference1.setPostalNotif(notificationPreference.getPostalNotif());

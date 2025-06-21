@@ -38,9 +38,9 @@ public class UserClientController {
     }
 
     @PutMapping("/client/{ID}")
-    public NotificationPreference setNotificationPreferance(@PathVariable long ID,
+    public NotificationPreference updateNotificationPreferance(@PathVariable long ID,
                                                             @RequestBody NotificationPreference notificationPreference){
-        return notificationService.UpdateNotification(ID, notificationPreference);
+        return notificationService.UpdateNotification( notificationPreference);
     }
 
     @DeleteMapping("/client/{ID}")

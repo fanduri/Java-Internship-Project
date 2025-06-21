@@ -1,8 +1,10 @@
 package com.NitsaBedianashvili.Notifications.controller;
 
 import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
+import com.NitsaBedianashvili.Notifications.model.User;
 import com.NitsaBedianashvili.Notifications.service.AdminService;
 import com.NitsaBedianashvili.Notifications.service.NotificationService;
+import com.NitsaBedianashvili.Notifications.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +14,13 @@ import java.util.List;
 @RestController
 public class UserAdminController {
     @Autowired
-    private NotificationService Notificationservice;
+    private NotificationService notificationService;
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private UserService userService;
 
 
     //page where admins can see all clients information
@@ -24,13 +29,55 @@ public class UserAdminController {
         System.out.println(ID);
     //TODO
     }
+
+
     @GetMapping("/{ID}/clientInfo")
     public List<NotificationPreference> getAllClientInfo(@PathVariable long ID){
         return adminService.showInformationOfAllClients();
+        //TODO: need to check if ID matches an admin account
     }
 
 
-    //page where admins can see notification statuses (if they delived correctly or not etc.)
+    //Admin can create a user
+    @PostMapping("/{ID}/addUser")
+    public User addUser(@RequestBody User user){
+       return userService.createUser(user);
+    }
+
+    //Admin can update a user
+    @PutMapping("/{ID}/updateUser")
+    public void updateUserInfo(@RequestBody User user){
+         userService.updateUser(user);
+    }
+
+    //Admin can delete a user
+    @DeleteMapping("/{ID}/deleteUser")
+    public void deleteUser(@RequestBody User user){
+        userService.deleteAccount(user.getID());
+    }
+    //I dont think admin should be able to change notification preferance but here anyway
+    @PutMapping("/{ID}/updateUserNotifications")
+    public void updateUserNotification(@RequestBody NotificationPreference notificationPreference){
+        notificationService.UpdateNotification(notificationPreference);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //page where admins can see notification statuses (if they delivered correctly or not etc.)
     @GetMapping("/{ID}/notificationStatus")
     public void getAllNotificationStatus(@PathVariable long ID){
         //TODO

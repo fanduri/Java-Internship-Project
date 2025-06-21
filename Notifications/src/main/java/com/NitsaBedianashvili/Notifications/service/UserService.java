@@ -45,6 +45,7 @@ public class UserService {
     public NotificationPreference getUserPreferenceByUser (User user){
         return notificationRepo.findById(user.getID()).orElse(null);
     }
+
     //returns users preference by ID
     public NotificationPreference getUserPreferenceByID(Long id){
         return notificationRepo.findById(id).orElse(null);
@@ -56,6 +57,22 @@ public class UserService {
             userRepo.delete(user);
 
         }
+
+    }
+
+    public void updateUser(User user){
+        if(userRepo.existsById(user.getID())){
+
+            //I am making sure that if the user deletes the addresses
+            //notification preferences will stay consistent
+            User oldUserInfo=userRepo.getReferenceById(user.getID());
+            if(user.getPhoneNum()==0){getUserPreferenceByUser(user).setTelNotif(false);}
+            if(user.getAddress()==null){getUserPreferenceByUser(user).setPostalNotif(false);}
+            if(user.getEmail()==null){getUserPreferenceByUser(user).setEmailNotif(false);}
+
+            userRepo.save(user);
+        }
+        System.out.println("User Can Not Be Updated, User Does Not Exist!");
 
     }
 }
