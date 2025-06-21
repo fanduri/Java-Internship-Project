@@ -50,9 +50,26 @@ public class User {
 
 
     //security
-//    private String userName;
-//    private String password;
-//    private UserType usertype;
+    @Column(
+            nullable = false,
+            columnDefinition = "TEXT",
+            unique = true
+    )
+    private String username;
+
+    @Column(
+
+            columnDefinition = "TEXT",
+            length =199
+
+
+    )
+    private String password;
+
+    @Column(
+            nullable = false
+    )
+    private String usertype;
 
 //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
