@@ -23,13 +23,27 @@ public class User {
 
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @Column(
+            updatable = false
+    )
     private Long ID;
+
+    @Column(
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String name;
+
+    @Column(
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String surname;
+
 
     private String email;
     private String address;
-    private int phoneNum;
+    private Integer phoneNum;
 
 
 

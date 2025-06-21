@@ -16,10 +16,13 @@ public class NotificationPreference {
     private User user;
 
     @Id
+    @Column(
+            updatable = false
+    )
     private Long ID;
-    private boolean emailNotif;
-    private boolean postalNotif;
-    private boolean telNotif;
+    private Boolean emailNotif;
+    private Boolean postalNotif;
+    private Boolean telNotif;
 
 
 
