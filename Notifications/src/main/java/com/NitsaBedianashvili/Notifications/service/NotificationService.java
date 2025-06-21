@@ -31,12 +31,14 @@ public class NotificationService {
     }
 
     public NotificationPreference UpdateNotification(long id, NotificationPreference notificationPreference) {
-        if (notificationRepo.existsById(id) ){
+        if (notificationRepo.existsById(id)){
+//            notificationRepo.save()
             NotificationPreference notificationPreference1= notificationRepo.getReferenceById(id);
             notificationPreference1.setTelNotif(notificationPreference.getTelNotif());
             notificationPreference1.setEmailNotif(notificationPreference.getEmailNotif());
             notificationPreference1.setPostalNotif(notificationPreference.getPostalNotif());
-            return notificationPreference;
+//            return notificationRepo.save(notificationPreference);
+            return notificationPreference1;
 
         }
         return null;

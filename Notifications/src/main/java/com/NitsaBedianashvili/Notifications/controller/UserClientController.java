@@ -32,7 +32,7 @@ public class UserClientController {
         userService.createUser(user);
     }
 
-    @GetMapping("/client/{ID}/")
+    @GetMapping("/client/{ID}")
     public NotificationPreference getNotificationInformation(@PathVariable long ID) {
         return userService.getUserPreferenceByID(ID);
     }
@@ -41,6 +41,11 @@ public class UserClientController {
     public NotificationPreference setNotificationPreferance(@PathVariable long ID,
                                                             @RequestBody NotificationPreference notificationPreference){
         return notificationService.UpdateNotification(ID, notificationPreference);
+    }
+
+    @DeleteMapping("/client/{ID}")
+    public void deleteAccount (@PathVariable Long ID){
+         userService.deleteAccount(ID);
     }
 
 

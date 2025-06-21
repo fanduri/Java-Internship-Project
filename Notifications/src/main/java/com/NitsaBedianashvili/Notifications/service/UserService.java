@@ -18,6 +18,7 @@ public class UserService {
 
     public User createUser(User user) {
 
+        //TODO: need to check if the user exists already first
         NotificationPreference preferences = createDefaultPreferences(user);
 
         user.setNotificationPreference(preferences);
@@ -47,5 +48,14 @@ public class UserService {
     //returns users preference by ID
     public NotificationPreference getUserPreferenceByID(Long id){
         return notificationRepo.findById(id).orElse(null);
+    }
+
+    public void deleteAccount(Long id) {
+        if ( userRepo.existsById(id)){
+            User user= userRepo.getReferenceById(id);
+            userRepo.delete(user);
+
+        }
+
     }
 }
