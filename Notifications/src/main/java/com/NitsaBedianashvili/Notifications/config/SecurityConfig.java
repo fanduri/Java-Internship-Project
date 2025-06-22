@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurers
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -37,11 +38,12 @@ public class SecurityConfig {
                     request.requestMatchers("/admin/**").authenticated()
                             .requestMatchers("/client/**").authenticated()
                             .anyRequest().permitAll())
+                //TODO:database access control
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
 
             .formLogin(Customizer.withDefaults())    //for WEB
-            .httpBasic(Customizer.withDefaults())    //forPostman
-
-        ;
+            .httpBasic(Customizer.withDefaults()) ;  //forPostman;
         //TODO: csrf do something about it
 
 //            .sessionManagement(session ->
@@ -52,34 +54,10 @@ public class SecurityConfig {
     }
 
 
-//    //user Credentials
-//    @Bean
-//    public UserDetailsService userDetailsService(){
-//
-//        var user = User.builder()
-//                .username("nits")
-//                .password(passwordEncoder().encode("123"))
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user);    //it implements the userDetailsService interface
-//    }
-
-
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider=new DaoAuthenticationProvider();
-
-
-
-//        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder()); TODO:change this later
-        daoAuthenticationProvider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        daoAuthenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder(13));
         daoAuthenticationProvider.setUserDetailsService(userCredentialsService);
 
         return daoAuthenticationProvider;

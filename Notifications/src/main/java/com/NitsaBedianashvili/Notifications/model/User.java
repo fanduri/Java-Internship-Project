@@ -38,9 +38,6 @@ public class User {
     private Integer phoneNum;
 
 
-
-
-
     //security
     @Column(
             nullable = false,

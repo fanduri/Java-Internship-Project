@@ -8,6 +8,7 @@ import com.NitsaBedianashvili.Notifications.model.User;
 import com.NitsaBedianashvili.Notifications.repository.NotificationRepo;
 import com.NitsaBedianashvili.Notifications.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,8 @@ public class UserService {
 
     @Autowired
     NotificationRepo notificationRepo;
+
+    private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(13);
 
     /// ////////////////////CREATE OPERATIONS////////////////////////////////////////////////////////////
     @Transactional
@@ -36,6 +39,7 @@ public class UserService {
         NotificationPreference preferences = createDefaultPreferences(user);
 
         user.setNotificationPreference(preferences);
+        user.setPassword(encoder.encode(user.getPassword()));
         preferences.setUser(user);
 
         return userRepo.save(user);
