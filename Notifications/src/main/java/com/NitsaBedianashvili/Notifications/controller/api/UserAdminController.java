@@ -1,4 +1,4 @@
-package com.NitsaBedianashvili.Notifications.controller;
+package com.NitsaBedianashvili.Notifications.controller.api;
 
 import com.NitsaBedianashvili.Notifications.exception.DuplicateUserException;
 import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
@@ -40,7 +40,7 @@ public class UserAdminController {
     //TODO
     }
 
-
+/// //////////GETTING INFORMATION ////////////////////////////////////////
 
     @GetMapping("/{ID}/clientInfo")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
@@ -49,6 +49,16 @@ public class UserAdminController {
         return ResponseEntity.ok(clients);
     }
 
+//    @GetMapping("/{ID}/clientInfoSpecific")
+//    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
+//    public ResponseEntity<?> getSpecificClientInfo(@PathVariable long ID, Long userId)
+//            throws UserNotFoundException {
+//
+//        User user=userService.getUserInformationByID(userId);
+//        return ResponseEntity.ok(user);
+//    }
+
+////    /// //////////ADDING INFORMATION ////////////////////////////////////////
 
     //Admin can create a user
     @PostMapping("/{ID}/addUser")
@@ -66,6 +76,7 @@ public class UserAdminController {
         return ResponseEntity.ok(createdUser);
     }
 
+/////    /// //////////UPDATE INFORMATION ////////////////////////////////////////
 
     //Admin can update a user
     @PutMapping("/{ID}/updateUser")
@@ -80,6 +91,21 @@ public class UserAdminController {
         userService.updateUser(user);
         return ResponseEntity.ok("User updated successfully.");
     }
+
+
+    //I dont think admin should be able to change notification preferance but here anyway
+    @PutMapping("/{ID}/updateUserNotifications")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
+    public void updateUserNotification(@RequestBody NotificationPreference notificationPreference)
+            throws InvalidNotificationException {
+
+        //TODO : notification information updates
+        notificationPreferenceService.UpdateNotification(notificationPreference);
+        //TODO: error handling
+
+    }
+
+///////// ///////// DELETE INFORMATION ////////////////////////////////////////
 
     //Admin can delete a user
     @DeleteMapping("/{ID}/deleteUser")
@@ -96,43 +122,7 @@ public class UserAdminController {
     }
 
 
-    //I dont think admin should be able to change notification preferance but here anyway
-    @PutMapping("/{ID}/updateUserNotifications")
-    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public void updateUserNotification(@RequestBody NotificationPreference notificationPreference)
-            throws InvalidNotificationException {
-
-        //TODO : notification information updates
-        notificationPreferenceService.UpdateNotification(notificationPreference);
-        //TODO: error handling
-
-    }
 
 
-
-/// //////////////////////////////////////////////////////////////////////////////////
-/// Notification sending and handling below
-
-    //page where admins can see notification statuses (if they delivered correctly or not etc.)
-    @GetMapping("/{ID}/notificationStatus")
-    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public void getAllNotificationStatus(@PathVariable long ID){
-        //TODO
-    }
-
-
-    //page where admins can send notifications to chosen clients
-    @GetMapping("/{ID}/notificationSendingPage")
-    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public void getSendingPage(@PathVariable long ID){
-        //TODO
-    }
-
-    //page where admins can send notifications to chosen clients
-    @PostMapping("/{ID}/notificationSendingPage")
-    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public void sendNotification(@PathVariable long ID){
-        //TODO
-    }
 
 }

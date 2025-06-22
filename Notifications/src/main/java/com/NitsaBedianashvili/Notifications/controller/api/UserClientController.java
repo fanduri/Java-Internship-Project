@@ -1,4 +1,4 @@
-package com.NitsaBedianashvili.Notifications.controller;
+package com.NitsaBedianashvili.Notifications.controller.api;
 
 import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
 import com.NitsaBedianashvili.Notifications.exception.InvalidUserDataException;
@@ -24,24 +24,24 @@ public class UserClientController {
 
 
 
-    @GetMapping("/{ID}")
+    @GetMapping("/{id}")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public void getInformationAboutClient(@PathVariable long ID)
+    public void getInformationAboutClient(@PathVariable long id)
             throws UserNotFoundException, InvalidUserDataException {
         //TODO: mayhapse create a DTO
-         userService.getUserPreferenceByID(ID);
-         userService.getUserInformationByID(ID);
+         userService.getUserPreferenceByID(id);
+         userService.getUserInformationByID(id);
     }
 
-    @PutMapping("/{ID}")
+    @PutMapping("/{id}")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> updateNotificationPreferance
-            (@PathVariable long ID, @RequestBody NotificationPreference notificationPreference)
+            (@PathVariable long id, @RequestBody NotificationPreference notificationPreference)
             throws InvalidNotificationException
     {
-        if (notificationPreference == null || ID == 0) {
+        if (notificationPreference == null || id == 0) {
             return ResponseEntity.badRequest()
-                    .body("Error: Request body or user ID is missing.");
+                    .body("Error: Request body or user id is missing.");
         }
         NotificationPreference notificationPreference1
                 = notificationPreferenceService.UpdateNotification( notificationPreference);
@@ -49,16 +49,16 @@ public class UserClientController {
         return ResponseEntity.ok(notificationPreference1);
     }
 
-    @DeleteMapping("/{ID}")
+    @DeleteMapping("/{id}")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public ResponseEntity<?> deleteAccount (@PathVariable Long ID)
+    public ResponseEntity<?> deleteAccount (@PathVariable Long id)
             throws UserNotFoundException, InvalidUserDataException {
 
-        if (ID == 0) {
+        if (id == 0) {
             return ResponseEntity.badRequest()
                     .body("Error: User ID is required.");
         }
-        userService.deleteAccountByID(ID);
+        userService.deleteAccountByID(id);
         return ResponseEntity.ok("Account deleted successfully.");
 
     }

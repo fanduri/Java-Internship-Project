@@ -13,5 +13,5 @@ import java.util.List;
 public interface NotificationRepo extends JpaRepository<Notification, Long> {
     List<Notification> findByRecipientID(Long recipientID);
 
-    List<Notification> findBySenderId(Long recipientID);
+    List<Notification> findBySenderID(Long recipientID);
 }

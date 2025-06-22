@@ -1,4 +1,4 @@
-package com.NitsaBedianashvili.Notifications.controller;
+package com.NitsaBedianashvili.Notifications.controller.api;
 
 import com.NitsaBedianashvili.Notifications.model.Notification;
 import com.NitsaBedianashvili.Notifications.service.NotificationService;
@@ -52,7 +52,5 @@ public class AdminNotificationsController {
         return notificationService.getAdminsSentNotificationsInfo(ID);
         //TODO: ERROR HANDLING
     }
-
-
 
 }

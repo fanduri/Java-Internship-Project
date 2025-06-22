@@ -1,4 +1,4 @@
-package com.NitsaBedianashvili.Notifications.controller;
+package com.NitsaBedianashvili.Notifications.controller.api;
 
 import com.NitsaBedianashvili.Notifications.exception.DuplicateUserException;
 import com.NitsaBedianashvili.Notifications.exception.InvalidUserDataException;
@@ -6,9 +6,6 @@ import com.NitsaBedianashvili.Notifications.model.User;
 import com.NitsaBedianashvili.Notifications.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,9 +20,10 @@ public class HomeController {
 
     //page where everyone ends up, you can choose to register or log in
     @GetMapping("/")
-    public void hello(){
-        System.out.println( "Hello User, Register or Log In");
+    public ResponseEntity<String> hello() {
+        return ResponseEntity.ok("Welcome! Please register or log in.");
     }
+
 
     @PostMapping("/registerUser")
     public ResponseEntity<?> addUser(@RequestBody User user) throws InvalidUserDataException, DuplicateUserException {

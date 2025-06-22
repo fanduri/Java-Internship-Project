@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Data
 @Entity
-@Table(name = "notifications")
+@Table(name = "notifications_preference")
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter

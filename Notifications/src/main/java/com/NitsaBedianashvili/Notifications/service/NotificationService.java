@@ -57,7 +57,7 @@ public class NotificationService {
         //TODO:error handling
     }
     public List<Notification> getAdminsSentNotificationsInfo(Long ID){
-        return notificationRepo.findBySenderId(ID);
+        return notificationRepo.findBySenderID(ID);
         //TODO:error handling
     }
 ///////////////// MARKING MESSAGE AS READ ////////////////////////////
