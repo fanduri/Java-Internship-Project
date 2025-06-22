@@ -1,15 +1,16 @@
 package com.NitsaBedianashvili.Notifications.controller;
 
+import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
+import com.NitsaBedianashvili.Notifications.exception.InvalidUserDataException;
+import com.NitsaBedianashvili.Notifications.exception.UserNotFoundException;
 import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
-import com.NitsaBedianashvili.Notifications.model.User;
 import com.NitsaBedianashvili.Notifications.service.NotificationService;
 import com.NitsaBedianashvili.Notifications.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+@RequestMapping("/client")
 @RestController
 public class UserClientController {
 
@@ -20,33 +21,42 @@ public class UserClientController {
     private NotificationService notificationService;
 
 
-    //page where everyone ends up, you can choose to register or log in
-    @GetMapping("/")
-    public void hello(){
-        System.out.println( "Hello User, Register or Log In");
-    }
 
-    @PostMapping("/register")
-    public User addUser(@RequestBody User user){
-//        System.out.println("hello "+user);
-        return userService.createUser(user);
-    }
-
-    @GetMapping("/client/{ID}")
-    public void getInformationAboutClient(@PathVariable long ID) {
+    @GetMapping("/{ID}")
+    public void getInformationAboutClient(@PathVariable long ID)
+            throws UserNotFoundException, InvalidUserDataException {
+        //TODO: mayhapse create a DTO
          userService.getUserPreferenceByID(ID);
          userService.getUserInformationByID(ID);
     }
 
-    @PutMapping("/client/{ID}")
-    public NotificationPreference updateNotificationPreferance(@PathVariable long ID,
-                                                            @RequestBody NotificationPreference notificationPreference){
-        return notificationService.UpdateNotification( notificationPreference);
+    @PutMapping("/{ID}")
+    public ResponseEntity<?> updateNotificationPreferance(@PathVariable long ID,
+                                                          @RequestBody NotificationPreference notificationPreference)
+            throws InvalidNotificationException
+    {
+
+        if (notificationPreference == null || ID == 0) {
+            return ResponseEntity.badRequest()
+                    .body("Error: Request body or user ID is missing.");
+        }
+        NotificationPreference notificationPreference1
+                = notificationService.UpdateNotification( notificationPreference);
+
+        return ResponseEntity.ok(notificationPreference1);
     }
 
-    @DeleteMapping("/client/{ID}")
-    public void deleteAccount (@PathVariable Long ID){
-         userService.deleteAccount(ID);
+    @DeleteMapping("/{ID}")
+    public ResponseEntity<?> deleteAccount (@PathVariable Long ID)
+            throws UserNotFoundException, InvalidUserDataException {
+
+        if (ID == 0) {
+            return ResponseEntity.badRequest()
+                    .body("Error: User ID is required.");
+        }
+        userService.deleteAccountByID(ID);
+        return ResponseEntity.ok("Account deleted successfully.");
+
     }
 
 

@@ -21,12 +21,11 @@ public class UserCredentialsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepo.findByUsername(username);
         if(user==null){
-            throw new UsernameNotFoundException("User with username : " +
-                    username+" was not found");
+            throw new UsernameNotFoundException("User with username : " + username+" was not found");
         }
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getUsertype())));
+                Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
     }
 }

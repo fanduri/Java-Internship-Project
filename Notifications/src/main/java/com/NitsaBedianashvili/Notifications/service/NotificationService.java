@@ -1,5 +1,7 @@
 package com.NitsaBedianashvili.Notifications.service;
 
+import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
+import com.NitsaBedianashvili.Notifications.exception.NotificationNotFoundException;
 import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
 import com.NitsaBedianashvili.Notifications.repository.NotificationRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,28 +15,42 @@ public class NotificationService {
     @Autowired
     NotificationRepo notificationRepo ;
 
-    public void putInNotificationList( NotificationPreference notificationPreference){
+    public void putInNotificationList( NotificationPreference notificationPreference)
+            throws InvalidNotificationException {
+
+        if (notificationPreference == null) {
+            throw new InvalidNotificationException("Notification preference cannot be null");
+        }
         notificationRepo.save(notificationPreference);
     }
 
 
-    public void deleteNotificationPreferance( NotificationPreference notificationPreference) {
+    public void deleteNotificationPreferance( NotificationPreference notificationPreference)
+            throws NotificationNotFoundException {
+
+        if (!notificationRepo.existsById(notificationPreference.getID())) {
+            throw new NotificationNotFoundException
+                    ("Notification preference with ID " + notificationPreference.getID() + " not found");
+        }
         notificationRepo.delete(notificationPreference);
     }
 
-    public NotificationPreference UpdateNotification( NotificationPreference notificationPreference) {
+    public NotificationPreference UpdateNotification( NotificationPreference notificationPreference) throws InvalidNotificationException {
 
-        //TODO: DOes not work!!!!!!!!!
-        if (notificationRepo.existsById(notificationPreference.getID())){
-//            notificationRepo.save()
-            NotificationPreference notificationPreference1= notificationRepo.getReferenceById(notificationPreference.getID());
-            notificationPreference1.setTelNotif(notificationPreference.getTelNotif());
-            notificationPreference1.setEmailNotif(notificationPreference.getEmailNotif());
-            notificationPreference1.setPostalNotif(notificationPreference.getPostalNotif());
-//            return notificationRepo.save(notificationPreference);
-            return notificationPreference1;
 
+        if (notificationPreference == null || notificationPreference.getID() == null) {
+            throw new InvalidNotificationException("Notification ID is required for update");
         }
-        return null;
+        //TODO: DOes not work!!!!!!!!!
+
+        NotificationPreference notificationPreference1=
+                notificationRepo.getReferenceById(notificationPreference.getID());
+
+        notificationPreference1.setTelNotif(notificationPreference.getTelNotif());
+        notificationPreference1.setEmailNotif(notificationPreference.getEmailNotif());
+        notificationPreference1.setPostalNotif(notificationPreference.getPostalNotif());
+
+        return notificationRepo.save(notificationPreference1);
+
     }
 }
