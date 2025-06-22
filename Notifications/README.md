@@ -5,6 +5,16 @@ A Spring Boot-based Notification Management System for user and admin management
 
 Developed as an internship project at CrocoBet.
 
+## Important Note
+
+**API-Only Functionality**:  
+This application currently only works through HTTP requests (tested via Postman). 
+The browser interface is not functional due to time constraints during development.
+
+**UI Disclaimer**:  
+The existing HTML and CSS templates should be disregarded as they do not represent the intended final implementation. 
+Please interact with the system exclusively through the API endpoints.
+
 ## Table of Contents
 
 - [Features](#features)
