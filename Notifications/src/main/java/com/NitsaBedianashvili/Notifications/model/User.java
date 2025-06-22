@@ -51,9 +51,7 @@ public class User {
 
     @Column(
 
-            columnDefinition = "TEXT",
-            length =199
-
+            columnDefinition = "TEXT"
 
     )
     private String password;
