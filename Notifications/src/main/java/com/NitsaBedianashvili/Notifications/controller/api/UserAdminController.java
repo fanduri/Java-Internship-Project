@@ -33,7 +33,7 @@ public class UserAdminController {
     //page where admins can see all clients information
 
 
-    @GetMapping("/{ID}/home")
+    @GetMapping("/{id}/home")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void getHomePage(@PathVariable long ID){
         System.out.println(ID);
@@ -42,14 +42,14 @@ public class UserAdminController {
 
 /// //////////GETTING INFORMATION ////////////////////////////////////////
 
-    @GetMapping("/{ID}/clientInfo")
+    @GetMapping("/{id}/clientInfo")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> getAllClientInfo(@PathVariable long ID){
         List<NotificationPreference> clients = adminService.showInformationOfAllClients();
         return ResponseEntity.ok(clients);
     }
 
-//    @GetMapping("/{ID}/clientInfoSpecific")
+//    @GetMapping("/{id}/clientInfoSpecific")
 //    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
 //    public ResponseEntity<?> getSpecificClientInfo(@PathVariable long ID, Long userId)
 //            throws UserNotFoundException {
@@ -61,7 +61,7 @@ public class UserAdminController {
 ////    /// //////////ADDING INFORMATION ////////////////////////////////////////
 
     //Admin can create a user
-    @PostMapping("/{ID}/addUser")
+    @PostMapping("/{id}/addUser")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> addUser(@RequestBody User user)
             throws InvalidUserDataException, DuplicateUserException
@@ -79,7 +79,7 @@ public class UserAdminController {
 /////    /// //////////UPDATE INFORMATION ////////////////////////////////////////
 
     //Admin can update a user
-    @PutMapping("/{ID}/updateUser")
+    @PutMapping("/{id}/updateUser")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> updateUserInfo(@RequestBody User user)
             throws UserNotFoundException, InvalidUserDataException {
@@ -94,7 +94,7 @@ public class UserAdminController {
 
 
     //I dont think admin should be able to change notification preferance but here anyway
-    @PutMapping("/{ID}/updateUserNotifications")
+    @PutMapping("/{id}/updateUserNotifications")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void updateUserNotification(@RequestBody NotificationPreference notificationPreference)
             throws InvalidNotificationException {
@@ -108,7 +108,7 @@ public class UserAdminController {
 ///////// ///////// DELETE INFORMATION ////////////////////////////////////////
 
     //Admin can delete a user
-    @DeleteMapping("/{ID}/deleteUser")
+    @DeleteMapping("/{id}/deleteUser")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> deleteUser(@RequestBody User user)
             throws UserNotFoundException, InvalidUserDataException {

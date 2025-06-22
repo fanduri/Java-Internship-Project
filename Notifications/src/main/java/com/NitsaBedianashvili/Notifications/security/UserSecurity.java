@@ -22,6 +22,10 @@ public class UserSecurity {
     }
 
     public boolean isSelf(Authentication authentication, Long userId) {
+        if (authentication == null || userId == null) {
+            return false;
+        }
+
         //get the currently authenticated user's info
         UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
 
@@ -30,6 +34,15 @@ public class UserSecurity {
 
         //compare the IDs
         return currentUser.getID().equals(userId);
+    }
+
+    public boolean isAdmin(Authentication authentication) {
+        if (authentication == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
     }
 
 }

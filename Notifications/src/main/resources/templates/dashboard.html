@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/base}">
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">Dashboard</h1>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 th:text="${totalCustomers ?: 0}">0</h4>
+                            <p class="card-text">Total Customers</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-people fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 th:text="${emailOptIns ?: 0}">0</h4>
+                            <p class="card-text">Email Opt-ins</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-envelope fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 th:text="${smsOptIns ?: 0}">0</h4>
+                            <p class="card-text">SMS Opt-ins</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-phone fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 th:text="${recentNotifications ?: 0}">0</h4>
+                            <p class="card-text">Recent Notifications</p>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-bell fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <a href="/customers/new" th:href="@{/customers/new}" class="btn btn-primary mb-2 w-100">
+                        <i class="bi bi-person-plus"></i> Add New Customer
+                    </a>
+                    <a href="/customers" th:href="@{/customers}" class="btn btn-outline-primary mb-2 w-100">
+                        <i class="bi bi-list"></i> View All Customers
+                    </a>
+                    <a href="/reports" th:href="@{/reports}" class="btn btn-outline-secondary w-100">
+                        <i class="bi bi-graph-up"></i> View Reports
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Recent Activity</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush" th:if="${recentActivities != null and !recentActivities.empty}">
+                        <div class="list-group-item border-0 px-0" th:each="activity : ${recentActivities}">
+                            <small class="text-muted" th:text="${activity.timestamp}">Time</small>
+                            <p class="mb-0" th:text="${activity.description}">Activity description</p>
+                        </div>
+                    </div>
+                    <p class="text-muted mb-0" th:if="${recentActivities == null or recentActivities.empty}">
+                        No recent activity
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
