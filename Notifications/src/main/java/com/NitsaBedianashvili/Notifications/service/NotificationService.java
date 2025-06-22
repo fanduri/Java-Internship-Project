@@ -46,6 +46,11 @@ public class NotificationService {
         //TODO:error handling
     }
 
+    public Notification getMessageByMessageID(Long messageId) {
+        return notificationRepo.getReferenceById(messageId);
+        //TODO:error handling
+    }
+
 ////////READING  MESSAGE INFO AS ADMIN//////////////////////////////
     public List<Notification> getAllNotificationsInfo(){
         return notificationRepo.findAll();
@@ -66,6 +71,17 @@ public class NotificationService {
         System.out.println("NO ACCESS ");
         //TODO:error handling
     }
+
+    public void markAllAsReadForUser(Long id) {
+        List<Notification> notifications =notificationRepo.findByRecipientID(id);
+        for (Notification notification : notifications){
+            notification.setDeliveryStatus(Notification.DELIVERY_STATUS.DELIVERED);
+            notificationRepo.save(notification);
+        }
+        //TODO:error handling
+
+    }
+
 
 /// ////////////////////////////////////////////////////////////////////////
 
