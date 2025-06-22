@@ -3,8 +3,10 @@ package com.NitsaBedianashvili.Notifications.controller.api;
 import com.NitsaBedianashvili.Notifications.model.Notification;
 import com.NitsaBedianashvili.Notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -21,21 +23,29 @@ public class AdminNotificationsController {
  ///////////////////////////SENDING NOTIFICATIONS ////////////////////////////////////////
     @PostMapping("/{id}/send")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public Notification sendNotification(@PathVariable Long ID , @RequestBody Notification notification){
-        if (notification.getSenderID().equals(ID)){
-           return notificationService.sendMessageToUser(notification);
+    public Notification sendNotification(@PathVariable Long id , @RequestBody Notification notification){
+        try {
+            if (!notification.getSenderID().equals(id)) {
+                System.out.println("DENIED SENDING");
+                return null;
+            }
+            return notificationService.sendMessageToUser(notification);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error sending notification: " + e.getMessage());
         }
-        System.out.println("DENIED SENDING ");
-        return null;
-
-        //TODO: ERROR HANDLING
     }
     @PostMapping("/{id}/sendAll")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void sendNotificationToAllUsers
-            (@PathVariable Long ID , @RequestBody String text){
-        notificationService.sendMessageToAllUsers(ID,text);
-        //TODO: ERROR HANDLING
+            (@PathVariable Long id , @RequestBody String text){
+
+        try {
+            notificationService.sendMessageToAllUsers(id, text);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error sending notifications to all users: " + e.getMessage());
+        }
     }
 
 
@@ -44,15 +54,23 @@ public class AdminNotificationsController {
     @GetMapping("/{id}/allNotifications")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public List<Notification> getAllNotifications(){
-        return notificationService.getAllNotificationsInfo();
-        //TODO: ERROR HANDLING
+        try {
+            return notificationService.getAllNotificationsInfo();
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error retrieving all notifications: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}/allNotifications/sentByMe")
     @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
-    public List<Notification> getAllNotifsSentByMe(@PathVariable Long ID){
-        return notificationService.getAdminsSentNotificationsInfo(ID);
-        //TODO: ERROR HANDLING
+    public List<Notification> getAllNotifsSentByMe(@PathVariable Long id){
+        try {
+            return notificationService.getAdminsSentNotificationsInfo(id);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Error retrieving sent notifications: " + e.getMessage());
+        }
     }
 
 }
