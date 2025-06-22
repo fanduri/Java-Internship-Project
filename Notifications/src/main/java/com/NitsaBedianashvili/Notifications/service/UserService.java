@@ -44,11 +44,13 @@ public class UserService {
 
     @Transactional
     public void createUsers(User[] users) throws InvalidUserDataException, DuplicateUserException {
+        //TODO: does not work properly !! It creates the users But still throws error 500
         if (users == null || users.length == 0) {
             throw new InvalidUserDataException("User list cannot be empty.");
         }
         for (User user : users) {
             createUser(user);
+            System.out.println("user: "+user.toString()+" successfully added");
         }
     }
 

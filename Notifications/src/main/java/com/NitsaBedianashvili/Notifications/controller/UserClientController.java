@@ -8,9 +8,11 @@ import com.NitsaBedianashvili.Notifications.service.NotificationService;
 import com.NitsaBedianashvili.Notifications.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/client")
+@PreAuthorize("hasRole('CLIENT')")
 @RestController
 public class UserClientController {
 
@@ -31,11 +33,10 @@ public class UserClientController {
     }
 
     @PutMapping("/{ID}")
-    public ResponseEntity<?> updateNotificationPreferance(@PathVariable long ID,
-                                                          @RequestBody NotificationPreference notificationPreference)
+    public ResponseEntity<?> updateNotificationPreferance
+            (@PathVariable long ID, @RequestBody NotificationPreference notificationPreference)
             throws InvalidNotificationException
     {
-
         if (notificationPreference == null || ID == 0) {
             return ResponseEntity.badRequest()
                     .body("Error: Request body or user ID is missing.");

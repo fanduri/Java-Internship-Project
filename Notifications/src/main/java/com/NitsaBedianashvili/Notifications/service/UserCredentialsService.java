@@ -1,6 +1,7 @@
 package com.NitsaBedianashvili.Notifications.service;
 
 import com.NitsaBedianashvili.Notifications.model.User;
+import com.NitsaBedianashvili.Notifications.model.UserPrincipal;
 import com.NitsaBedianashvili.Notifications.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +15,6 @@ import java.util.Collections;
 @Service
 public class UserCredentialsService implements UserDetailsService {
 
-
     @Autowired
     private UserRepo userRepo;
     @Override
@@ -23,9 +23,7 @@ public class UserCredentialsService implements UserDetailsService {
         if(user==null){
             throw new UsernameNotFoundException("User with username : " + username+" was not found");
         }
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole())));
+
+        return new UserPrincipal(user);
     }
 }
