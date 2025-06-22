@@ -4,7 +4,7 @@ import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationExcepti
 import com.NitsaBedianashvili.Notifications.exception.InvalidUserDataException;
 import com.NitsaBedianashvili.Notifications.exception.UserNotFoundException;
 import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
-import com.NitsaBedianashvili.Notifications.service.NotificationService;
+import com.NitsaBedianashvili.Notifications.service.NotificationPreferenceService;
 import com.NitsaBedianashvili.Notifications.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +20,12 @@ public class UserClientController {
     private UserService userService;
 
     @Autowired
-    private NotificationService notificationService;
+    private NotificationPreferenceService notificationPreferenceService;
 
 
 
     @GetMapping("/{ID}")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void getInformationAboutClient(@PathVariable long ID)
             throws UserNotFoundException, InvalidUserDataException {
         //TODO: mayhapse create a DTO
@@ -33,6 +34,7 @@ public class UserClientController {
     }
 
     @PutMapping("/{ID}")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> updateNotificationPreferance
             (@PathVariable long ID, @RequestBody NotificationPreference notificationPreference)
             throws InvalidNotificationException
@@ -42,12 +44,13 @@ public class UserClientController {
                     .body("Error: Request body or user ID is missing.");
         }
         NotificationPreference notificationPreference1
-                = notificationService.UpdateNotification( notificationPreference);
+                = notificationPreferenceService.UpdateNotification( notificationPreference);
 
         return ResponseEntity.ok(notificationPreference1);
     }
 
     @DeleteMapping("/{ID}")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> deleteAccount (@PathVariable Long ID)
             throws UserNotFoundException, InvalidUserDataException {
 

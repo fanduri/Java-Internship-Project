@@ -7,7 +7,7 @@ import com.NitsaBedianashvili.Notifications.exception.UserNotFoundException;
 import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
 import com.NitsaBedianashvili.Notifications.model.User;
 import com.NitsaBedianashvili.Notifications.service.AdminService;
-import com.NitsaBedianashvili.Notifications.service.NotificationService;
+import com.NitsaBedianashvili.Notifications.service.NotificationPreferenceService;
 import com.NitsaBedianashvili.Notifications.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +21,7 @@ import java.util.List;
 @RestController
 public class UserAdminController {
     @Autowired
-    private NotificationService notificationService;
+    private NotificationPreferenceService notificationPreferenceService;
 
     @Autowired
     private AdminService adminService;
@@ -32,7 +32,9 @@ public class UserAdminController {
 
     //page where admins can see all clients information
 
+
     @GetMapping("/{ID}/home")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void getHomePage(@PathVariable long ID){
         System.out.println(ID);
     //TODO
@@ -41,6 +43,7 @@ public class UserAdminController {
 
 
     @GetMapping("/{ID}/clientInfo")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> getAllClientInfo(@PathVariable long ID){
         List<NotificationPreference> clients = adminService.showInformationOfAllClients();
         return ResponseEntity.ok(clients);
@@ -49,6 +52,7 @@ public class UserAdminController {
 
     //Admin can create a user
     @PostMapping("/{ID}/addUser")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> addUser(@RequestBody User user)
             throws InvalidUserDataException, DuplicateUserException
 
@@ -65,6 +69,7 @@ public class UserAdminController {
 
     //Admin can update a user
     @PutMapping("/{ID}/updateUser")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> updateUserInfo(@RequestBody User user)
             throws UserNotFoundException, InvalidUserDataException {
 
@@ -78,6 +83,7 @@ public class UserAdminController {
 
     //Admin can delete a user
     @DeleteMapping("/{ID}/deleteUser")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public ResponseEntity<?> deleteUser(@RequestBody User user)
             throws UserNotFoundException, InvalidUserDataException {
 
@@ -92,11 +98,12 @@ public class UserAdminController {
 
     //I dont think admin should be able to change notification preferance but here anyway
     @PutMapping("/{ID}/updateUserNotifications")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void updateUserNotification(@RequestBody NotificationPreference notificationPreference)
             throws InvalidNotificationException {
 
         //TODO : notification information updates
-        notificationService.UpdateNotification(notificationPreference);
+        notificationPreferenceService.UpdateNotification(notificationPreference);
         //TODO: error handling
 
     }
@@ -108,6 +115,7 @@ public class UserAdminController {
 
     //page where admins can see notification statuses (if they delivered correctly or not etc.)
     @GetMapping("/{ID}/notificationStatus")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void getAllNotificationStatus(@PathVariable long ID){
         //TODO
     }
@@ -115,12 +123,14 @@ public class UserAdminController {
 
     //page where admins can send notifications to chosen clients
     @GetMapping("/{ID}/notificationSendingPage")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void getSendingPage(@PathVariable long ID){
         //TODO
     }
 
     //page where admins can send notifications to chosen clients
     @PostMapping("/{ID}/notificationSendingPage")
+    @PreAuthorize("@userSecurity.isSelf(authentication, #id)")
     public void sendNotification(@PathVariable long ID){
         //TODO
     }

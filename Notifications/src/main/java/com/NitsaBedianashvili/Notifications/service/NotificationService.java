@@ -1,56 +1,73 @@
 package com.NitsaBedianashvili.Notifications.service;
 
-import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
-import com.NitsaBedianashvili.Notifications.exception.NotificationNotFoundException;
-import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
+import com.NitsaBedianashvili.Notifications.model.Notification;
+
+import com.NitsaBedianashvili.Notifications.model.User;
 import com.NitsaBedianashvili.Notifications.repository.NotificationRepo;
+import com.NitsaBedianashvili.Notifications.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Service
 public class NotificationService {
     @Autowired
-    NotificationRepo notificationRepo ;
+    NotificationRepo notificationRepo;
+    @Autowired
+    UserRepo userRepo;
 
-    public void putInNotificationList( NotificationPreference notificationPreference)
-            throws InvalidNotificationException {
-
-        if (notificationPreference == null) {
-            throw new InvalidNotificationException("Notification preference cannot be null");
-        }
-        notificationRepo.save(notificationPreference);
+/// //////////SENDING MESSAGE //////////////////////////////////////////////
+    public Notification sendMessageToUser(Long senderId,Long recipientId,String text){
+        Notification notification =new Notification(senderId,recipientId,text);
+        return notificationRepo.save(notification);
+        //TODO:error handling
     }
 
-
-    public void deleteNotificationPreferance( NotificationPreference notificationPreference)
-            throws NotificationNotFoundException {
-
-        if (!notificationRepo.existsById(notificationPreference.getID())) {
-            throw new NotificationNotFoundException
-                    ("Notification preference with ID " + notificationPreference.getID() + " not found");
-        }
-        notificationRepo.delete(notificationPreference);
+    public Notification sendMessageToUser(Notification notification){
+        return notificationRepo.save(notification);
+        //TODO:error handling
     }
 
-    public NotificationPreference UpdateNotification( NotificationPreference notificationPreference) throws InvalidNotificationException {
+    public void sendMessageToAllUsers(Long ID, String text){
+        List<User> users = userRepo.findAll();
 
-
-        if (notificationPreference == null || notificationPreference.getID() == null) {
-            throw new InvalidNotificationException("Notification ID is required for update");
+        for(User user : users){
+            Notification notification= new Notification(ID, user.getID(), text);
+            notificationRepo.save(notification);
         }
-        //TODO: DOes not work!!!!!!!!!
-
-        NotificationPreference notificationPreference1=
-                notificationRepo.getReferenceById(notificationPreference.getID());
-
-        notificationPreference1.setTelNotif(notificationPreference.getTelNotif());
-        notificationPreference1.setEmailNotif(notificationPreference.getEmailNotif());
-        notificationPreference1.setPostalNotif(notificationPreference.getPostalNotif());
-
-        return notificationRepo.save(notificationPreference1);
-
+        //TODO:error handling
     }
+
+/// ///////////READING MESSAGE AS USER ///////////////////////////
+
+    public List<Notification> getUserInbox(Long userId){
+       return notificationRepo.findByRecipientID(userId);
+        //TODO:error handling
+    }
+
+////////READING  MESSAGE INFO AS ADMIN//////////////////////////////
+    public List<Notification> getAllNotificationsInfo(){
+        return notificationRepo.findAll();
+        //TODO:error handling
+    }
+    public List<Notification> getAdminsSentNotificationsInfo(Long ID){
+        return notificationRepo.findBySenderId(ID);
+        //TODO:error handling
+    }
+///////////////// MARKING MESSAGE AS READ ////////////////////////////
+    public void markMessageAsRead(Long messageId,Long userId){
+        Notification notification =notificationRepo.getReferenceById(messageId);
+        if(notification.getRecipientID()==userId){
+            notification.setDeliveryStatus(Notification.DELIVERY_STATUS.DELIVERED);
+            notificationRepo.save(notification);
+            return;
+        }
+        System.out.println("NO ACCESS ");
+        //TODO:error handling
+    }
+
+/// ////////////////////////////////////////////////////////////////////////
+
+
 }

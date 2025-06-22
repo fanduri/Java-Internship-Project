@@ -5,7 +5,7 @@ import com.NitsaBedianashvili.Notifications.exception.InvalidUserDataException;
 import com.NitsaBedianashvili.Notifications.exception.UserNotFoundException;
 import com.NitsaBedianashvili.Notifications.model.NotificationPreference;
 import com.NitsaBedianashvili.Notifications.model.User;
-import com.NitsaBedianashvili.Notifications.repository.NotificationRepo;
+import com.NitsaBedianashvili.Notifications.repository.NotificationPreferenceRepo;
 import com.NitsaBedianashvili.Notifications.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,7 +18,7 @@ public class UserService {
     UserRepo userRepo;
 
     @Autowired
-    NotificationRepo notificationRepo;
+    NotificationPreferenceRepo notificationPreferenceRepo;
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(13);
 
@@ -69,6 +69,11 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found."));
     }
 
+    public User findByUsername(String username) {
+        //TODO:some error handling
+        return userRepo.findByUsername(username) ;
+    }
+
 
     //returns users preference by User
     public NotificationPreference getUserPreferenceByUser(User user)
@@ -78,7 +83,7 @@ public class UserService {
             throw new InvalidUserDataException("User must have a valid ID.");
         }
 
-        return notificationRepo.findById(user.getID())
+        return notificationPreferenceRepo.findById(user.getID())
                 .orElseThrow(() -> new UserNotFoundException("User's preference with ID " + user.getID() + " not found."));
     }
 
@@ -89,7 +94,7 @@ public class UserService {
         if (id == 0) {
             throw new InvalidUserDataException("ID cannot be null.");
         }
-        return notificationRepo.findById(id)
+        return notificationPreferenceRepo.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User's preference with ID " + id + " not found."));
     }
 
@@ -121,7 +126,7 @@ public class UserService {
         }
 
         userRepo.save(user);
-        notificationRepo.save(preference);
+        notificationPreferenceRepo.save(preference);
 
     }
 
@@ -171,6 +176,7 @@ public class UserService {
         return preferences;
 
     }
+
 
 }
 
