@@ -1,5 +1,7 @@
 package com.NitsaBedianashvili.Notifications.controller.api;
 
+import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
+import com.NitsaBedianashvili.Notifications.exception.NotificationAccessException;
 import com.NitsaBedianashvili.Notifications.model.Notification;
 import com.NitsaBedianashvili.Notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class ClientNotificationsController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error retrieving message: " + e.getMessage());
+        } catch (InvalidNotificationException e) {
+            throw new RuntimeException(e);
+            //TODO:better catching
         }
     }
 
@@ -51,6 +56,11 @@ public class ClientNotificationsController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error marking message as read: " + e.getMessage());
+        } catch (NotificationAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidNotificationException e) {
+            throw new RuntimeException(e);
+            //TODO:better catching
         }
     }
 

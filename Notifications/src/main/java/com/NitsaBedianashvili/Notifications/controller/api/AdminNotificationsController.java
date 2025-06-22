@@ -1,5 +1,6 @@
 package com.NitsaBedianashvili.Notifications.controller.api;
 
+import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
 import com.NitsaBedianashvili.Notifications.model.Notification;
 import com.NitsaBedianashvili.Notifications.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class AdminNotificationsController {
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "Error sending notification: " + e.getMessage());
+        } catch (InvalidNotificationException e) {
+            throw new RuntimeException(e);
+            //TODO:some better catching
         }
     }
     @PostMapping("/{id}/sendAll")

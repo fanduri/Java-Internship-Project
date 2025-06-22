@@ -38,8 +38,6 @@ public class NotificationPreferenceService {
         if (notificationPreference == null || notificationPreference.getID() == null) {
             throw new InvalidNotificationException("Notification ID is required for update");
         }
-        //TODO: DOes not work!!!!!!!!!
-
         NotificationPreference notificationPreference1=
                 notificationPreferenceRepo.getReferenceById(notificationPreference.getID());
 

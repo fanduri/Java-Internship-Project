@@ -1,5 +1,7 @@
 package com.NitsaBedianashvili.Notifications.service;
 
+import com.NitsaBedianashvili.Notifications.exception.InvalidNotificationException;
+import com.NitsaBedianashvili.Notifications.exception.NotificationAccessException;
 import com.NitsaBedianashvili.Notifications.model.Notification;
 
 import com.NitsaBedianashvili.Notifications.model.User;
@@ -18,68 +20,108 @@ public class NotificationService {
     UserRepo userRepo;
 
 /// //////////SENDING MESSAGE //////////////////////////////////////////////
-    public Notification sendMessageToUser(Long senderId,Long recipientId,String text){
-        Notification notification =new Notification(senderId,recipientId,text);
-        return notificationRepo.save(notification);
-        //TODO:error handling
+    public Notification sendMessageToUser(Long senderId,Long recipientId,String text)
+            throws InvalidNotificationException {
+        try {
+            Notification notification = new Notification(senderId, recipientId, text);
+            return notificationRepo.save(notification);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidNotificationException("Invalid notification data: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send message: " + e.getMessage(), e);
+        }
     }
 
-    public Notification sendMessageToUser(Notification notification){
-        return notificationRepo.save(notification);
-        //TODO:error handling
+    public Notification sendMessageToUser(Notification notification) throws InvalidNotificationException {
+        try {
+            return notificationRepo.save(notification);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidNotificationException("Invalid notification data: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send message: " + e.getMessage(), e);
+        }
     }
 
     public void sendMessageToAllUsers(Long ID, String text){
-        List<User> users = userRepo.findAll();
 
-        for(User user : users){
-            Notification notification= new Notification(ID, user.getID(), text);
-            notificationRepo.save(notification);
+        try {
+            List<User> users = userRepo.findAll();
+            for (User user : users) {
+                Notification notification = new Notification(ID, user.getID(), text);
+                notificationRepo.save(notification);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send messages to all users: " + e.getMessage(), e);
         }
-        //TODO:error handling
     }
 
 /// ///////////READING MESSAGE AS USER ///////////////////////////
 
     public List<Notification> getUserInbox(Long userId){
-       return notificationRepo.findByRecipientID(userId);
-        //TODO:error handling
+        try {
+            return notificationRepo.findByRecipientID(userId);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve user inbox: " + e.getMessage(), e);
+        }
     }
 
-    public Notification getMessageByMessageID(Long messageId) {
-        return notificationRepo.getReferenceById(messageId);
-        //TODO:error handling
+
+    public Notification getMessageByMessageID(Long messageId) throws InvalidNotificationException {
+        try {
+            return notificationRepo.findById(messageId)
+                    .orElseThrow(() -> new InvalidNotificationException("Message not found with ID: " + messageId));
+        } catch (InvalidNotificationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve message: " + e.getMessage(), e);
+        }
     }
 
 ////////READING  MESSAGE INFO AS ADMIN//////////////////////////////
     public List<Notification> getAllNotificationsInfo(){
-        return notificationRepo.findAll();
-        //TODO:error handling
+        try {
+            return notificationRepo.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve all notifications: " + e.getMessage(), e);
+        }
     }
     public List<Notification> getAdminsSentNotificationsInfo(Long ID){
-        return notificationRepo.findBySenderID(ID);
-        //TODO:error handling
+        try {
+            return notificationRepo.findBySenderID(ID);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to retrieve admin's sent notifications: " + e.getMessage(), e);
+        }
     }
 ///////////////// MARKING MESSAGE AS READ ////////////////////////////
-    public void markMessageAsRead(Long messageId,Long userId){
-        Notification notification =notificationRepo.getReferenceById(messageId);
-        if(notification.getRecipientID()==userId){
-            notification.setDeliveryStatus(Notification.DELIVERY_STATUS.DELIVERED);
-            notificationRepo.save(notification);
-            return;
+    public void markMessageAsRead(Long messageId,Long userId) throws NotificationAccessException, InvalidNotificationException {
+        try {
+            Notification notification = notificationRepo.findById(messageId)
+                    .orElseThrow(() -> new InvalidNotificationException("Message not found with ID: " + messageId));
+
+            if (notification.getRecipientID().equals(userId)) {
+                notification.setDeliveryStatus(Notification.DELIVERY_STATUS.DELIVERED);
+                notificationRepo.save(notification);
+            } else {
+                System.out.println("NO ACCESS");
+                throw new NotificationAccessException("User " + userId + " cannot mark this message as read");
+            }
+        } catch (InvalidNotificationException | NotificationAccessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to mark message as read: " + e.getMessage(), e);
         }
-        System.out.println("NO ACCESS ");
-        //TODO:error handling
     }
 
-    public void markAllAsReadForUser(Long id) {
-        List<Notification> notifications =notificationRepo.findByRecipientID(id);
-        for (Notification notification : notifications){
-            notification.setDeliveryStatus(Notification.DELIVERY_STATUS.DELIVERED);
-            notificationRepo.save(notification);
+    public void markAllAsReadForUser(Long ID) {
+        try {
+            List<Notification> notifications = notificationRepo.findByRecipientID(ID);
+            for (Notification notification : notifications) {
+                notification.setDeliveryStatus(Notification.DELIVERY_STATUS.DELIVERED);
+                notificationRepo.save(notification);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to mark all messages as read: " + e.getMessage(), e);
         }
-        //TODO:error handling
-
     }
 
 
